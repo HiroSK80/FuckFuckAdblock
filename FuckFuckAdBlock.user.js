@@ -21,6 +21,24 @@
 
         var self = this;
         window.addEventListener('load', function() {
+            // ads are blocked so:
+            //dfp_ad = undefined;
+
+            // find first id, will be used as id for dfp_ad variable
+            var elements = document.getElementsByTagName("*");
+            for (var i = 0; i < elements.length; i++) {
+                if (elements[i].id) { dfp_ad = elements[i].id; break; }
+            }
+
+            // id not found, create one one body tag
+            if (dfp_ad === undefined)
+            {
+                var body = document.getElementsByTagName("BODY")[0];
+                var att = document.createAttribute("id");
+                att.value = "dfp_ad";
+                body.setAttributeNode(att);
+            }
+
             setTimeout(function() {
                 if(self._options.checkOnLoad === true)
                     self.check(false);
@@ -28,12 +46,11 @@
         }, false);
 
         // hotfix
-        var self = this;
         this.debug = {
             set: function(x){ debug = !!x; return self;},
             get: function(){ return debug; }
-        }
-    }
+        };
+    };
 
     FuckAdBlock.prototype = {
         setOption : function(options, value) {
@@ -43,7 +60,7 @@
                 options[key] = value;
             }
 
-            for(option in options)
+            for (var option in options)
                 this._options[option] = options[option];
 
             return this;
